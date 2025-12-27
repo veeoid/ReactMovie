@@ -1,5 +1,6 @@
 import MovieCard from '../components/MovieCard';
 import { useState } from 'react';
+import '../css/Home.css';
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -22,18 +23,6 @@ function Home() {
       title: 'Whispers of the Old World',
       release_date: '2022-08-30',
       url: 'https://www.example.com/movies/whispers-old-world',
-    },
-    {
-      id: 1027,
-      title: 'Velocity Shift',
-      release_date: '2025-01-10',
-      url: 'https://www.example.com/movies/velocity-shift',
-    },
-    {
-      id: 1028,
-      title: 'Cooking with Chaos',
-      release_date: '2021-03-14',
-      url: 'https://www.example.com/movies/cooking-with-chaos',
     },
   ];
 
