@@ -1,30 +1,28 @@
 import MovieCard from '../components/MovieCard';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getPopularMovies, searchMovies } from '../services/api';
 import '../css/Home.css';
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [movies, setMovies] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const movies = [
-    {
-      id: 1024,
-      title: 'The Silent Horizon',
-      release_date: '2023-11-15',
-      url: 'https://www.example.com/movies/the-silent-horizon',
-    },
-    {
-      id: 1025,
-      title: 'Neon Dreams: Cyberpunk Chronicles',
-      release_date: '2024-05-22',
-      url: 'https://www.example.com/movies/neon-dreams',
-    },
-    {
-      id: 1026,
-      title: 'Whispers of the Old World',
-      release_date: '2022-08-30',
-      url: 'https://www.example.com/movies/whispers-old-world',
-    },
-  ];
+  useEffect(() => {
+    const loadPopularMovies = async () => {
+      try {
+        const popularMovies = await getPopularMovies();
+        setMovies(popularMovies);
+      } catch (err) {
+        console.log(err);
+        setError('Failed to load movies..');
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadPopularMovies();
+  }, []);
 
   const handleSeach = (e) => {
     e.preventDefault(); //doesn't refresh page
@@ -45,11 +43,16 @@ function Home() {
           Search
         </button>
       </form>
-      <div className="movies-grid">
-        {movies.map((movie) => (
-          <MovieCard movie={movie} key={movie.id} />
-        ))}
-      </div>
+      {error && <div className="error-message">{error}</div>}
+      {loading ? (
+        <div className="loading">Loading....</div>
+      ) : (
+        <div className="movies-grid">
+          {movies.map((movie) => (
+            <MovieCard movie={movie} key={movie.id} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
