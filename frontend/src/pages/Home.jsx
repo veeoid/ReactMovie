@@ -1,5 +1,6 @@
 import MovieCard from '../components/MovieCard';
 import { useState, useEffect } from 'react';
+import { MovieProvider } from '../contexts/MovieContext';
 import { getPopularMovies, searchMovies } from '../services/api';
 import '../css/Home.css';
 
@@ -24,9 +25,22 @@ function Home() {
     loadPopularMovies();
   }, []);
 
-  const handleSeach = (e) => {
+  const handleSeach = async (e) => {
     e.preventDefault(); //doesn't refresh page
-    alert(searchQuery);
+    if (!searchQuery.trim) return;
+    if (loading) return;
+
+    setLoading(true);
+    try {
+      const searchResults = await searchMovies(searchQuery);
+      setMovies(searchResults);
+      setError(null);
+    } catch (err) {
+      console.log(err);
+      setError('Failed to search movies');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
